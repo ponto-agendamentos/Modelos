@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Nails & Beauty</title>
+    <style>
+        /* CSS Reset e Estilos Globais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #faf6f5;
+            color: #4a4a4a;
+            line-height: 1.6;
+        }
+
+        /* Cabeçalho */
+        header {
+            background: #ffffff;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #f0e2e1;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #a8586c;
+            letter-spacing: 1px;
+        }
+
+        nav a {
+            color: #666;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #a8586c;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), 
+                        url('https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=1200&q=80') center/cover;
+            height: 45vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: #8c3f52;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 550px;
+            color: #666;
+        }
+
+        /* BARRA DE NAVEGAÇÃO DESLIZANTE (TABS) */
+        .tabs-container {
+            background: #ffffff;
+            border-bottom: 1px solid #f0e2e1;
+            position: sticky;
+            top: 65px;
+            z-index: 90;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .tabs-wrapper {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            /* Esconde a barra de rolagem visualmente em navegadores modernos */
+            scrollbar-width: none; 
+        }
+
+        .tabs-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #777;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .tab-btn.active {
+            color: #a8586c;
+            border-bottom-color: #a8586c;
+        }
+
+        /* SEÇÕES DE CONTEÚDO */
+        .content-section {
+            padding: 3rem 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .tab-content {
+            display: none; /* Oculto por padrão */
+        }
+
+        .tab-content.active {
+            display: block; /* Visível quando ativo */
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            color: #8c3f52;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #f0e2e1;
+            padding-bottom: 0.5rem;
+        }
+
+            /* Grids para os Cards */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Estilo do Card Clicável */
+        .card {
+            background-color: #ffffff;
+            padding: 1.8rem;
+            border-radius: 12px;
+            border: 1px solid #f2e6e6;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer; /* Transforma o ponteiro em "mãozinha" para mostrar que é clicável */
+            user-select: none;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+            border-color: #e2b3be;
+        }
+
+        .card h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .price {
+            font-size: 1.3rem;
+            color: #a8586c;
+            font-weight: bold;
+            margin: 0.8rem 0;
+        }
+
+        /* --- NOVOS ESTILOS PARA EXPANDIR O CARD --- */
+
+        /* Dica visual abaixo do preço */
+        .card-hint {
+            font-size: 0.75rem;
+            color: #a8586c;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            display: block;
+        }
+
+        /* Texto de detalhes escondido por padrão */
+        .card-details {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #f0e2e1;
+            font-size: 0.88rem;
+            color: #555;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        /* Quando o card recebe a classe 'active' via JS, os detalhes aparecem */
+        .card.active .card-details {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        /* Cards de Profissionais */
+        .pro-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e2b3be;
+            margin: 0 auto 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        /* Seção de Agendamento */
+        .booking {
+            background-color: #f3e8e8;
+            padding: 3.5rem 1.5rem;
+        }
+
+        .booking-card {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            text-align: center;
+        }
+
+        .btn-main {
+            background-color: #a8586c;
+            color: #ffffff;
+            padding: 0.9rem 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(168, 88, 108, 0.2);
+            display: block;
+            width: 100%;
+        }
+
+        .btn-main:hover {
+            background-color: #8c3f52;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid #a8586c;
+            color: #a8586c;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #a8586c;
+            color: #ffffff;
+        }
+
+        /* Modal do Vídeo Tutorial */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            padding: 1.5rem;
+            position: relative;
+            text-align: right;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #555;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #000;
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: #ffffff;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #f0e2e1;
+            color: #888;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+      <!-- Cabeçalho Limpo (Apenas o Nome/Logo) -->
+    <header style="justify-content: center;">
+        <div class="logo">💅 Studio Nails & Beauty</div>
+    </header>
+
+
+    <!-- Banner Principal -->
+    <section class="hero">
+        <h1>Sua autoestima renovada</h1>
+        <p>Cuidado, sofisticação e excelência para as suas unhas.</p>
+    </section>
+
+    <!-- BARRA DESLIZANTE DE ABAS (ESTILO APPBARBER) -->
+    <div class="tabs-container" id="menu-abas">
+        <div class="tabs-wrapper">
+            <button class="tab-btn active" onclick="switchTab('servicos', this)">Serviços</button>
+            <button class="tab-btn" onclick="switchTab('profissionais', this)">Profissionais</button>
+            <button class="tab-btn" onclick="switchTab('produtos', this)">Produtos</button>
+            <button class="tab-btn" onclick="switchTab('pacotes', this)">Pacotes</button>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DAS ABAS -->
+    <div class="content-section">
+
+
+        <!-- 1. ABA SERVIÇOS (Corrigida com a função de expandir) -->
+        <div id="tab-servicos" class="tab-content active">
+            
+            <h2 class="category-title">✨ Combos Especiais</h2>
+            <div class="grid-cards">
+                
+                <div class="card" onclick="toggleCard(this)">
+                    <h3>Combo Pé e Mão Completo</h3>
+                    <p>Cuidado completo para pés e mãos com hidratação profunda.</p>
+                    <div class="price">R$ 65,00</div>
+                    <span class="card-hint">👇 Clique para ver detalhes</span>
+                    
+                    <div class="card-details">
+                        <p><strong>O que está incluso:</strong></p>
+                        <p>• Cutilagem e lixamento perfeito para pés e mãos.</p>
+                        <p>• Esmaltação com marcas de alta durabilidade.</p>
+                        <p>• Esfoliação suave e massagem hidratante.</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <h3>Combo Esmaltação em Gel + Spa dos Pés</h3>
+                    <p>Maior durabilidade nas mãos e relaxamento para os pés.</p>
+                    <div class="price">R$ 110,00</div>
+                    <span class="card-hint">👇 Clique para ver detalhes</span>
+                    
+                    <div class="card-details">
+                        <p><strong>O que está incluso:</strong></p>
+                        <p>• Esmaltação em gel nas mãos que dura até 20 dias.</p>
+                        <p>• Imersão dos pés em sais aromáticos e hidratação profunda.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <h2 class="category-title">💅 Serviços Individuais</h2>
+            <div class="grid-cards">
+                
+                <div class="card" onclick="toggleCard(this)">
+                    <h3>Manicure Simples</h3>
+                    <p>Cutilagem, lixamento e esmaltação tradicional.</p>
+                    <div class="price">R$ 35,00</div>
+                    <span class="card-hint">👇 Clique para ver detalhes</span>
+                    
+                    <div class="card-details">
+                        <p><strong>Detalhes:</strong> Limpeza de cutículas, modelagem das unhas e esmaltação à sua escolha.</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <h3>Pedicure Simples</h3>
+                    <p>Cuidado clássico para os pés e esmaltação.</p>
+                    <div class="price">R$ 35,00</div>
+                    <span class="card-hint">👇 Clique para ver detalhes</span>
+                    
+                    <div class="card-details">
+                        <p><strong>Detalhes:</strong> Higienização, remoção de cutículas, corte, lixamento e esmaltação.</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <h3>Alongamento em Gel</h3>
+                    <p>Aplicação com acabamento natural e alta durabilidade.</p>
+                    <div class="price">R$ 130,00</div>
+                    <span class="card-hint">👇 Clique para ver detalhes</span>
+                    
+                    <div class="card-details">
+                        <p><strong>Detalhes:</strong> Moldagem de unhas com gel UV para unhas compridas, resistentes e naturais.</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <h3>Manutenção de Gel</h3>
+                    <p>Nivelamento, cutilagem e nova esmaltação.</p>
+                    <div class="price">R$ 80,00</div>
+                    <span class="card-hint">👇 Clique para ver detalhes</span>
+                    
+                    <div class="card-details">
+                        <p><strong>Detalhes:</strong> Reposição e estrutura do gel referente ao crescimento, cutilagem e nova cor.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- 2. ABA PROFISSIONAIS -->
+        <div id="tab-profissionais" class="tab-content">
+            <h2 class="category-title">Nossa Equipe</h2>
+            <div class="grid-cards">
+                <div class="card">
+                    <div class="pro-avatar">👩‍🎨</div>
+                    <h3>Juliana Silva</h3>
+                    <p>Especialista em Alongamento em Gel e Nail Art.</p>
+                </div>
+                <div class="card">
+                    <div class="pro-avatar">👩‍🌾</div>
+                    <h3>Camila Santos</h3>
+                    <p>Especialista em Pedicure Curativa e Spa dos Pés.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. ABA PRODUTOS -->
+        <div id="tab-produtos" class="tab-content">
+            <h2 class="category-title">Produtos para Cuidados em Casa</h2>
+            <div class="grid-cards">
+                <div class="card">
+                    <h3>Óleo Hidratante de Cutículas</h3>
+                    <p>Nutrição diária para manter suas cutículas perfeitas.</p>
+                    <div class="price">R$ 25,00</div>
+                </div>
+                <div class="card">
+                    <h3>Creme Esfoliante para Pés</h3>
+                    <p>Suavidade e renovação para a pele.</p>
+                    <div class="price">R$ 38,00</div>
+                </div>
+            </div>
+        </div>
+
+          <!-- 4. ABA PACOTES (COM CARDS EXPANSÍVEIS) -->
+        <div id="tab-pacotes" class="tab-content">
+            <h2 class="category-title">Pacotes de Assinatura Mensal</h2>
+            <div class="grid-cards">
+                
+                <div class="card" onclick="toggleCard(this)">
+                    <h3>Plano Mensal - Pé e Mão</h3>
+                    <p>4 sessões de Pé e Mão no mês (1x por semana).</p>
+                    <div class="price">R$ 220,00 <span style="font-size: 0.8rem; font-weight: normal;">/mês</span></div>
+                    <span class="card-hint">👇 Clique para ver detalhes e benefícios</span>
+                    
+                    <div class="card-details">
+                        <p><strong>Benefícios do Pacote:</strong></p>
+                        <p>• 4 Atendimentos completos de Pé e Mão no mês.</p>
+                        <p>• <strong>Economia:</strong> Você economiza R$ 40,00 no valor total dos atendimentos avulsos.</p>
+                        <p>• Prioridade na escolha de dias e horários na agenda.</p>
+                        <p>• Pagamento único no início do mês.</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="toggleCard(this)">
+                    <h3>Plano VIP Gel</h3>
+                    <p>1 Aplicação + 1 Manutenção + Desconto em produtos.</p>
+                    <div class="price">R$ 180,00 <span style="font-size: 0.8rem; font-weight: normal;">/mês</span></div>
+                    <span class="card-hint">👇 Clique para ver detalhes e benefícios</span>
+                    
+                    <div class="card-details">
+                        <p><strong>Benefícios do Pacote:</strong></p>
+                        <p>• 1 Aplicação e 1 Manutenção de Gel por mês. </p>
+                        <p>• 2 Manicures Simples para manter a cutilagem perfeita entre as manutenções.</p>
+                        <p>• 10% de desconto em qualquer produto.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    <!-- Seção de Agendamento -->
+    <section class="booking" id="agendamento">
+        <h2 class="section-title" style="text-align: center; color: #8c3f52; margin-bottom: 1.5rem;">Reserve seu Horário</h2>
+        <div class="booking-card">
+            <p style="font-size: 1rem; margin-bottom: 1.5rem; color: #666;">
+                Escolha o melhor dia e horário disponível diretamente em nossa agenda oficial.
+            </p>
+            
+            <!-- BOTÃO VÍDEO TUTORIAL -->
+            <button onclick="abrirVideo()" class="btn-secondary">
+                🎬 Como reservar horário (Vídeo)
+            </button>
+
+            <!-- BOTÃO GOOGLE AGENDA -->
+            <a href="https://calendar.app.google/81jjYwtuvjNpkeZK6" 
+               target="_blank" 
+               class="btn-main">
+                📅 Agendar no Google Agenda
+            </a>
+        </div>
+    </section>
+
+    <!-- MODAL DO VÍDEO TUTORIAL -->
+    <div id="videoModal" class="modal-overlay">
+        <div class="modal-content">
+            <button onclick="fecharVideo()" class="close-btn">✕ Fechar</button>
+            <div class="video-container">
+                <video id="meuVideoTutorial" controls>
+                    <source src="tutorial.mp4" type="video/mp4">
+                    Seu navegador não suporta vídeos em HTML.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; Studio Nails & Beauty. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Scripts em JS -->
+    <script>
+        // Função para alternar entre as abas
+        function switchTab(tabName, element) {
+            // Esconde todo o conteúdo das abas
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove a classe 'active' de todos os botões
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Exibe a aba clicada e marca o botão como ativo
+            document.getElementById('tab-' + tabName).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // Funções para abrir/fechar o vídeo
+        function abrirVideo() {
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        function fecharVideo() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('meuVideoTutorial');
+            
+            modal.style.display = 'none';
+            video.pause();
+        }
+
+        // Função para expandir e recolher o card
+        function toggleCard(cardElement) {
+            // Alterna a classe 'active' no card clicado
+            cardElement.classList.toggle('active');
+            
+            // Opcional: altera o texto da dica entre expandir/recolher
+            const hint = cardElement.querySelector('.card-hint');
+            if (hint) {
+                if (cardElement.classList.contains('active')) {
+                    hint.innerText = '👆 Clique para fechar';
+                } else {
+                    hint.innerText = '👇 Clique para ver detalhes';
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
+
