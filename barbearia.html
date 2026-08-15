@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barbearia VINTAGE & CORTE</title>
+    <title>Barbearia Vintage Barber</title>
+    <!-- Fonte do Google Fonts para padronização em qualquer dispositivo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         /* CSS Reset e Estilos Globais */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
         }
 
         body {
@@ -19,17 +23,23 @@
             line-height: 1.6;
         }
 
+        /* Trava de rolagem da página quando modal está aberto */
+        body.modal-open {
+            overflow: hidden;
+        }
+
         /* Cabeçalho */
         header {
             background: #1a1a1a;
-            padding: 1rem 2rem;
+            padding: 1.2rem 2rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 2px solid #c59b27;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .logo {
@@ -40,23 +50,11 @@
             letter-spacing: 2px;
         }
 
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            margin-left: 1.5rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: #c59b27;
-        }
-
         /* Banner Hero */
         .hero {
             background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
                         url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1200&q=80') center/cover;
-            height: 70vh;
+            height: 40vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -66,265 +64,860 @@
         }
 
         .hero h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: #c59b27;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
+            font-size: 1.1rem;
+            max-width: 550px;
+            color: #ccc;
         }
 
+        /* TABS DE NAVEGAÇÃO DESLIZANTE */
+        .tabs-container {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 65px;
+            z-index: 90;
+        }
+
+        .tabs-wrapper {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            scrollbar-width: none; 
+        }
+
+        .tabs-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            text-transform: uppercase;
+        }
+
+        .tab-btn.active {
+            color: #c59b27;
+            border-bottom-color: #c59b27;
+        }
+
+        /* SEÇÕES DE CONTEÚDO */
+        .content-section {
+            padding: 3rem 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            color: #c59b27;
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* Grids */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Card */
+        .card {
+            background-color: #1e1e1e;
+            padding: 1.8rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: #c59b27;
+            box-shadow: 0 6px 15px rgba(197, 155, 39, 0.1);
+        }
+
+        .card h3 {
+            margin-bottom: 0.5rem;
+            color: #fff;
+            font-size: 1.15rem;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .duration {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 6px;
+        }
+
+        .price {
+            font-size: 1.4rem;
+            color: #c59b27;
+            font-weight: bold;
+            margin: 0.8rem 0;
+        }
+
+        /* Aviso para Produtos Vitrine */
+        .product-location-notice {
+            font-size: 0.8rem;
+            color: #888;
+            background: #181818;
+            border: 1px dashed #333;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Avatar Profissionais */
+        .pro-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #2a2a2a;
+            border: 2px solid #c59b27;
+            margin: 0 auto 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        /* Botões */
         .btn-main {
             background-color: #c59b27;
             color: #121212;
-            padding: 0.8rem 2rem;
+            padding: 0.8rem 1.5rem;
             text-decoration: none;
             font-weight: bold;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            transition: background 0.3s;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
+            display: block;
+            width: 100%;
+            text-align: center;
         }
 
         .btn-main:hover {
             background-color: #e5b32f;
         }
 
-        /* Seção de Serviços */
-        .services {
-            padding: 4rem 2rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-title {
+        .btn-whatsapp {
+            background-color: #25d366;
+            color: #ffffff;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
             text-align: center;
-            font-size: 2rem;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #20ba5a;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid #c59b27;
             color: #c59b27;
-            margin-bottom: 3rem;
-            text-transform: uppercase;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
         }
 
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+        .btn-secondary:hover {
+            background-color: #c59b27;
+            color: #121212;
         }
 
-        .service-card {
-            background-color: #1e1e1e;
-            padding: 2rem;
-            border-radius: 8px;
+        /* Seção Vídeo / Ajuda */
+        .booking {
+            background-color: #181818;
+            padding: 3.5rem 1.5rem;
+        }
+
+        .booking-card {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #222;
+            padding: 2.5rem;
+            border-radius: 16px;
             border: 1px solid #333;
             text-align: center;
-            transition: transform 0.3s;
         }
 
-        .service-card:hover {
-            transform: translateY(-5px);
-            border-color: #c59b27;
-        }
-
-        .service-card h3 {
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-
-        .price {
-            font-size: 1.5rem;
-            color: #c59b27;
-            font-weight: bold;
-            margin: 1rem 0;
-        }
-
-        /* Seção de Agendamento */
-        .booking {
-            background-color: #1a1a1a;
-            padding: 4rem 2rem;
-        }
-
-        .booking-form {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #242424;
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input, 
-        .form-group select {
+        /* ESTRUTURA DOS MODAIS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 0.8rem;
-            background-color: #121212;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 4px;
-            font-size: 1rem;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
         }
 
-        .form-group input:focus, 
-        .form-group select:focus {
-            outline: none;
-            border-color: #c59b27;
+        .modal-content {
+            background: #1e1e1e;
+            border: 1px solid #c59b27;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 380px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: #c59b27;
+            font-size: 1.05rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 1.3rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        .modal-body {
+            padding: 1.2rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        .modal-body::-webkit-scrollbar-track {
+            background: #141414;
+        }
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #c59b27;
+            border-radius: 10px;
+        }
+
+        .policy-list {
+            list-style: none;
+        }
+
+        .policy-list li {
+            margin-bottom: 0.8rem;
+            font-size: 0.88rem;
+            color: #ccc;
+        }
+
+        @keyframes bounceScroll {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(3px); }
+        }
+
+        .scroll-indicator {
+            text-align: center;
+            font-size: 0.78rem;
+            color: #c59b27;
+            padding: 6px 0;
+            background: #181818;
+            border-top: 1px solid #282828;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scroll-indicator span {
+            display: inline-block;
+            animation: bounceScroll 1.2s infinite ease-in-out;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.2rem;
+            background: #161616;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .pro-selection-title {
+            color: #c59b27;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .pro-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-pro-choice {
+            background: #222;
+            border: 1px solid #c59b27;
+            color: #fff;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .btn-pro-choice:hover {
+            background: #c59b27;
+            color: #121212;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #000;
+            margin-top: 0.5rem;
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
         /* Rodapé */
         footer {
             background-color: #0d0d0d;
-            text-align: center;
-            padding: 2rem;
+            padding: 3rem 1.5rem 1.5rem 1.5rem;
             border-top: 1px solid #222;
-            color: #777;
+            color: #aaa;
+            font-size: 0.9rem;
         }
 
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
-            header { flex-direction: column; gap: 1rem; }
-            nav a { margin: 0 0.8rem; }
+        .footer-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col h4 {
+            color: #c59b27;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            font-size: 1rem;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #888;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: #c59b27;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid #1a1a1a;
+            padding-top: 1.5rem;
+            color: #555;
         }
     </style>
 </head>
 <body>
 
-    <!-- Cabeçalho / Navegação -->
+    <!-- Cabeçalho -->
     <header>
         <div class="logo">✂ Vintage Barber</div>
-        <nav>
-            <a href="#inicio">Início</a>
-            <a href="#servicos">Serviços</a>
-            <a href="#agendamento">Agendar</a>
-        </nav>
     </header>
 
     <!-- Banner Principal -->
-    <section class="hero" id="inicio">
+    <section class="hero">
         <h1>Estilo & Tradição</h1>
-        <p>O melhor atendimento com os profissionais mais qualificados da região. Cuide do seu visual com quem entende do assunto.</p>
-        <a href="#agendamento" class="btn-main">Reservar Agora</a>
+        <p>Corte, barba e alinhamento com a excelência que você merece.</p>
     </section>
 
-    <!-- Serviços e Preços -->
-    <section class="services" id="servicos">
-        <h2 class="section-title">Nossos Serviços</h2>
-        <div class="services-grid">
-            <div class="service-card">
-                <h3>Corte Cabelo</h3>
-                <p>Corte moderno ou clássico com acabamento perfeito.</p>
-                <div class="price">R$ 25,00</div>
+    <!-- TABS DE NAVEGAÇÃO -->
+    <div class="tabs-container">
+        <div class="tabs-wrapper">
+            <button class="tab-btn active" onclick="switchTab('servicos', this)">Serviços</button>
+            <button class="tab-btn" onclick="switchTab('barbeiros', this)">Barbeiros</button>
+            <button class="tab-btn" onclick="switchTab('produtos', this)">Produtos</button>
+            <button class="tab-btn" onclick="switchTab('clubes', this)">Assinaturas</button>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DAS TABS -->
+    <div class="content-section">
+
+        <!-- 1. SERVIÇOS -->
+        <div id="tab-servicos" class="tab-content active">
+            
+            <h2 class="category-title">💈 Serviços Principais</h2>
+            <div class="grid-cards">
+                
+                <div class="card">
+                    <div>
+                        <h3>Corte de Cabelo</h3>
+                        <p>Corte moderno ou clássico com acabamento na navalha e lavagem.</p>
+                        <p class="duration">⏱️ Duração: 40min</p>
+                        <div class="price">R$ 25,00</div>
+                    </div>
+                    <button onclick="abrirPoliticas('https://calendar.app.google/3z3w4WWadfQz2k7s9', 'https://calendar.app.google/3z3w4WWadfQz2k7s9')" 
+                            class="btn-main" 
+                            style="margin-top: 15px;">
+                        📅 Agendar Serviço
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3>Barba Completa</h3>
+                        <p>Modelagem com toalha quente, vapor de ozônio e óleos pós-barba.</p>
+                        <p class="duration">⏱️ Duração: 30min</p>
+                        <div class="price">R$ 15,00</div>
+                    </div>
+                    <button onclick="abrirPoliticas('https://calendar.app.google/3z3w4WWadfQz2k7s9', 'https://calendar.app.google/3z3w4WWadfQz2k7s9')" 
+                            class="btn-main" 
+                            style="margin-top: 15px;">
+                        📅 Agendar Serviço
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3>Combo Cabelo + Barba</h3>
+                        <p>A experiência completa para renovar o seu visual com desconto.</p>
+                        <p class="duration">⏱️ Duração: 1h 10min</p>
+                        <div class="price">R$ 35,00</div>
+                    </div>
+                    <button onclick="abrirPoliticas('https://calendar.app.google/3z3w4WWadfQz2k7s9', 'https://calendar.app.google/3z3w4WWadfQz2k7s9')" 
+                            class="btn-main" 
+                            style="margin-top: 15px;">
+                        📅 Agendar Serviço
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3>Sobrancelha Navalhada</h3>
+                        <p>Design rápido, higiênico e preciso no formato natural.</p>
+                        <p class="duration">⏱️ Duração: 15min</p>
+                        <div class="price">R$ 5,00</div>
+                    </div>
+                    <button onclick="abrirPoliticas('https://calendar.app.google/3z3w4WWadfQz2k7s9', 'https://calendar.app.google/3z3w4WWadfQz2k7s9')" 
+                            class="btn-main" 
+                            style="margin-top: 15px;">
+                        📅 Agendar Serviço
+                    </button>
+                </div>
+
             </div>
-            <div class="service-card">
-                <h3>Barba Completa</h3>
-                <p>Modelagem, toalha quente e produtos especiais.</p>
-                <div class="price">R$ 15,00</div>
+        </div>
+
+        <!-- 2. BARBEIROS -->
+        <div id="tab-barbeiros" class="tab-content">
+            <h2 class="category-title">Nossos Especialistas</h2>
+            <div class="grid-cards">
+                <div class="card">
+                    <div class="pro-avatar">💈</div>
+                    <h3>Marcos "Navalha"</h3>
+                    <p>Especialista em Degradê, Fade e Cortes Modernos.</p>
+                </div>
+                <div class="card">
+                    <div class="pro-avatar">🧔</div>
+                    <h3>Carlos Henrique</h3>
+                    <p>Mestre Barbeiro, especialista em Barboterapia e Toalha Quente.</p>
+                </div>
             </div>
-            <div class="service-card">
-                <h3>Combo Cabelo + Barba</h3>
-                <p>O pacote completo para renovar seu estilo.</p>
-                <div class="price">R$ 35,00</div>
+        </div>
+
+        <!-- 3. PRODUTOS (VITRINE) -->
+        <div id="tab-produtos" class="tab-content">
+            <h2 class="category-title">Produtos em Destaque</h2>
+            <div class="grid-cards">
+                
+                <div class="card">
+                    <div>
+                        <h3>Pomada Modeladora Matte</h3>
+                        <p>Fixação forte sem brilho para o dia a dia.</p>
+                        <div class="price">R$ 35,00</div>
+                    </div>
+                    <div class="product-location-notice">
+                        📍 <span>Disponível para compra no local</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3>Óleo para Barba (30ml)</h3>
+                        <p>Hidratação profunda e maciez para os fios.</p>
+                        <div class="price">R$ 30,00</div>
+                    </div>
+                    <div class="product-location-notice">
+                        📍 <span>Disponível para compra no local</span>
+                    </div>
+                </div>
+
             </div>
-            <div class="service-card">
-                <h3>Sobrancelha</h3>
-                <p>Design rápido e preciso.</p>
-                <div class="price">R$ 5,00</div>
+        </div>
+
+        <!-- 4. CLUBES / ASSINATURAS -->
+        <div id="tab-clubes" class="tab-content">
+            <h2 class="category-title">Planos de Assinatura Mensal</h2>
+            <div class="grid-cards">
+                
+                <div class="card">
+                    <div>
+                        <h3>Clube do Cabelo</h3>
+                        <p>Cortes ilimitados durante todo o mês + descontos em produtos.</p>
+                        <div class="price">R$ 70,00 <span style="font-size: 0.8rem; font-weight: normal;">/mês</span></div>
+                        <p style="font-size: 0.8rem; color: #aaa; margin-top: 10px;">
+                            ℹ️ <i>Já é assinante? Agende seu horário na aba <b>Serviços</b>.</i>
+                        </p>
+                    </div>
+                    <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20contratar%20o%20Clube%20do%20Cabelo." 
+                       target="_blank" 
+                       class="btn-whatsapp" 
+                       style="margin-top: 15px;">
+                        💬 Assinar via WhatsApp
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3>Clube VIP (Cabelo + Barba)</h3>
+                        <p>Atendimentos ilimitados de cabelo e barba com horário prioritário.</p>
+                        <div class="price">R$ 110,00 <span style="font-size: 0.8rem; font-weight: normal;">/mês</span></div>
+                        <p style="font-size: 0.8rem; color: #aaa; margin-top: 10px;">
+                            ℹ️ <i>Já é assinante? Agende seu horário na aba <b>Serviços</b>.</i>
+                        </p>
+                    </div>
+                    <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20contratar%20o%20Clube%20VIP." 
+                       target="_blank" 
+                       class="btn-whatsapp" 
+                       style="margin-top: 15px;">
+                        💬 Assinar via WhatsApp
+                    </a>
+                </div>
+
             </div>
+        </div>
+
+    </div>
+
+    <!-- Seção de Ajuda / Vídeo -->
+    <section class="booking">
+        <div class="booking-card">
+            <h2 style="color: #c59b27; margin-bottom: 1rem;">Dúvidas no Agendamento?</h2>
+            <p style="font-size: 0.95rem; margin-bottom: 1.5rem; color: #ccc;">
+                Veja o passo a passo rápido de como escolher seu horário em nosso vídeo explicativo.
+            </p>
+            
+            <button onclick="abrirVideo()" class="btn-secondary">
+                🎬 Ver Vídeo Explicativo
+            </button>
         </div>
     </section>
 
-  <!-- Agendamento Automático via Google Agenda -->
-<section class="booking" id="agendamento" style="text-align: center;">
-    <h2 class="section-title">Reserve seu Horário</h2>
-    <div class="booking-form" style="text-align: center;">
-        <p style="font-size: 1.1rem; margin-bottom: 1.5rem; color: #ddd;">
-            Escolha o melhor dia e horário diretamente em nossa agenda oficial.
-        </p>
-        
-        <!-- BOTÃO PARA ABRIR O VÍDEO TUTORIAL -->
-        <button onclick="abrirVideo()" class="btn-main" style="background-color: transparent; border: 2px solid #c59b27; color: #c59b27; margin-bottom: 1rem; width: 100%; display: block;">
-            🎬 Como reservar horário (Vídeo)
-        </button>
+    <!-- MODAL COMPACTO DE POLÍTICAS -->
+    <div id="policyModal" class="modal-overlay" onclick="fecharAoClicarFora(event, 'policyModal')">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h3>📌 Avisos Importantes</h3>
+                <button onclick="fecharPoliticasManualmente()" class="close-btn">✕</button>
+            </div>
+            
+            <div class="modal-body" id="policyBody">
+                <div style="background-color: #2a2208; border-left: 4px solid #c59b27; padding: 10px; margin-bottom: 1rem; border-radius: 4px;">
+                    <p style="font-size: 0.85rem; color: #f1f1f1; font-weight: 600;">
+                        ✂️ Precisa de mais de um serviço? (Ex: Cabelo + Barba)
+                    </p>
+                    <p style="font-size: 0.8rem; color: #ccc; margin-top: 2px;">
+                        Para agendar no mesmo horário, volte e selecione uma das nossas opções de <b>Combo</b>!
+                    </p>
+                </div>
 
-        <!-- BOTÃO DO GOOGLE AGENDA -->
-        <a href="https://calendar.app.google/tX42AyoESQqJXpcA8" 
-           target="_blank" 
-           class="btn-main" 
-           style="display: block; width: 100%; text-decoration: none; padding: 0.8rem 0;">
-            📅 Agendar no Google Agenda
-        </a>
-    </div>
-</section>
+                <ul class="policy-list">
+                    <li>💵 <b>Pagamento:</b> Realizado no local (Pix, Cartão ou Dinheiro).</li>
+                    <li>⏱️ <b>Tolerância:</b> Máximo de 10 minutos de atraso.</li>
+                    <li>❌ <b>Cancelamento:</b> Avise com no mínimo 2h de antecedência.</li>
+                    <li>💳 <b>Assinantes:</b> Informe o barbeiro na sua chegada!</li>
+                    <li>🧼 <b>Higiene:</b> Venha com os cabelos limpos para melhor aproveitamento do tempo.</li>
+                </ul>
+            </div>
 
-<!-- JANELA FLUTUANTE (MODAL) DO VÍDEO TUTORIAL -->
-<div id="videoModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 1rem;">
-    <div style="background: #1e1e1e; border: 1px solid #c59b27; border-radius: 8px; width: 100%; max-width: 600px; padding: 1.5rem; position: relative; text-align: right;">
-        
-        <!-- Botão Fechar (X) -->
-        <button onclick="fecharVideo()" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; margin-bottom: 0.5rem;">✕ Fechar</button>
-        
-        <!-- Player de Vídeo HTML5 -->
-        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 6px;">
-            <video id="meuVideoTutorial" controls style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-                <!-- COLOQUE O CAMINHO DO SEU ARQUIVO DE VÍDEO ABAIXO -->
-                <source src="tutorial.mp4" type="video/mp4">
-                Seu navegador não suporta vídeos em HTML.
-            </video>
+            <div class="scroll-indicator" id="scrollIndicator">
+                📜 Deslize para ver todos os avisos <span>👇</span>
+            </div>
+
+            <div class="modal-footer">
+                <div class="pro-selection-title">Selecione o Profissional:</div>
+                <div class="pro-buttons-container">
+                    <button onclick="irParaAgendamento('marcos')" class="btn-pro-choice">
+                        <span>💈 Marcos "Navalha"</span>
+                        <span>Agendar ➔</span>
+                    </button>
+                    <button onclick="irParaAgendamento('carlos')" class="btn-pro-choice">
+                        <span>🧔 Carlos Henrique</span>
+                        <span>Agendar ➔</span>
+                    </button>
+                </div>
+            </div>
+
         </div>
-
     </div>
-</div>
 
+    <!-- MODAL VÍDEO TUTORIAL -->
+    <div id="videoModal" class="modal-overlay" onclick="fecharAoClicarFora(event, 'videoModal')">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>🎬 Vídeo Explicativo</h3>
+                <button onclick="fecharVideoManualmente()" class="close-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="video-container">
+                    <video id="meuVideoTutorial" controls>
+                        <source src="tutorial.mp4" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
-
-    <!-- Rodapé -->
+    <!-- RODAPÉ COMPLETO -->
     <footer>
-        <p>&copy; 2026 Barbearia Vintage Barber. Todos os direitos reservados.</p>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>📍 Onde Estamos</h4>
+                <p>Rua Exemplo, 123 - Centro</p>
+                <p>Cidade - Estado, CEP 00000-000</p>
+                <a href="https://maps.google.com" target="_blank" style="color: #c59b27;">🗺️ Ver no Google Maps</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>⏰ Horário de Atendimento</h4>
+                <p>Terça a Sexta: 09h às 20h</p>
+                <p>Sábado: 08h às 18h</p>
+                <p>Domingo e Segunda: Fechado</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>📞 Contato</h4>
+                <p>Telefone: (00) 0000-0000</p>
+                <p>WhatsApp: (00) 90000-0000</p>
+                <a href="https://instagram.com" target="_blank">📸 Instagram @barbearia</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; Barbearia Vintage Barber. Todos os direitos reservados.</p>
+        </div>
     </footer>
 
-    <!-- Script de Agendamento -->
+    <!-- SCRIPT JS -->
     <script>
-        document.getElementById('formAgendamento').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Alternar entre as abas (Tabs)
+        function switchTab(tabName, element) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
 
-            const nome = document.getElementById('nome').value;
-            const telefone = document.getElementById('telefone').value;
-            const servico = document.getElementById('servico').value;
-            const data = document.getElementById('data').value;
-            const horario = document.getElementById('horario').value;
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
 
-            // Alerta simples de confirmação
-            alert(`Obrigado, ${nome}! Seu agendamento para ${servico} no dia ${data} às ${horario} foi registrado.`);
+            document.getElementById('tab-' + tabName).classList.add('active');
+            element.classList.add('active');
+        }
 
-            // Limpa o formulário
-            this.reset();
+        // Variáveis dos links dinâmicos dos barbeiros
+        let linkMarcosAtual = '';
+        let linkCarlosAtual = '';
+
+        // FUNÇÕES DE MODAL
+        function abrirModalGeral(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+            document.body.classList.add('modal-open');
+            
+            if (!history.state || history.state.modalAberto !== modalId) {
+                history.pushState({ modalAberto: modalId }, '', '');
+            }
+        }
+
+        function fecharModalGeral(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                
+                if (modalId === 'videoModal') {
+                    const video = document.getElementById('meuVideoTutorial');
+                    if (video) video.pause();
+                }
+            }
+        }
+
+        function abrirPoliticas(linkMarcos, linkCarlos) {
+            linkMarcosAtual = linkMarcos;
+            linkCarlosAtual = linkCarlos;
+            abrirModalGeral('policyModal');
+
+            const policyBody = document.getElementById('policyBody');
+            const indicator = document.getElementById('scrollIndicator');
+            if (policyBody && indicator) {
+                policyBody.scrollTop = 0;
+                indicator.classList.remove('hidden');
+            }
+        }
+
+        function fecharPoliticasManualmente() {
+            if (history.state && history.state.modalAberto === 'policyModal') {
+                history.back();
+            } else {
+                fecharModalGeral('policyModal');
+            }
+        }
+
+        function abrirVideo() {
+            abrirModalGeral('videoModal');
+        }
+
+        function fecharVideoManualmente() {
+            if (history.state && history.state.modalAberto === 'videoModal') {
+                history.back();
+            } else {
+                fecharModalGeral('videoModal');
+            }
+        }
+
+        window.addEventListener('popstate', function(event) {
+            fecharModalGeral('policyModal');
+            fecharModalGeral('videoModal');
         });
 
-function abrirVideo() {
-        document.getElementById('videoModal').style.display = 'flex';
-    }
+        // MONITORA A ROLAGEM
+        const policyBody = document.getElementById('policyBody');
+        const scrollIndicator = document.getElementById('scrollIndicator');
 
-    function fecharVideo() {
-        const modal = document.getElementById('videoModal');
-        const video = document.getElementById('meuVideoTutorial');
-        
-        modal.style.display = 'none';
-        video.pause(); // Pausa o vídeo quando fecha a janela
-    }
+        if (policyBody && scrollIndicator) {
+            policyBody.addEventListener('scroll', function() {
+                if (policyBody.scrollTop > 20 || (policyBody.scrollHeight - policyBody.scrollTop <= policyBody.clientHeight + 10)) {
+                    scrollIndicator.classList.add('hidden');
+                } else {
+                    scrollIndicator.classList.remove('hidden');
+                }
+            });
+        }
+
+        // Redireciona para o agendamento
+        function irParaAgendamento(prof) {
+            const url = (prof === 'marcos') ? linkMarcosAtual : linkCarlosAtual;
+            
+            // Fecha modal e limpa estado do histórico se necessário
+            if (history.state && history.state.modalAberto === 'policyModal') {
+                history.back();
+            } else {
+                fecharModalGeral('policyModal');
+            }
+
+            if (url) {
+                window.open(url, '_blank');
+            }
+        }
+
+        function fecharAoClicarFora(event, modalId) {
+            if (event.target.id === modalId) {
+                if (modalId === 'policyModal') fecharPoliticasManualmente();
+                if (modalId === 'videoModal') fecharVideoManualmente();
+            }
+        }
     </script>
 </body>
 </html>
